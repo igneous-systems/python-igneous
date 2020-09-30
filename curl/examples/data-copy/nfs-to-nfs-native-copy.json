@@ -1,0 +1,5 @@
+{
+	"source": "nfs://NFS_HOST1/NFS_EXPORT_PATH1",
+	"destination": "nfs://NFS_HOST2/NFS_EXPORT_PATH2?index=INDEX"
+}
+
