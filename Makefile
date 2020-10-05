@@ -13,6 +13,6 @@ dist:
 # > cat ~/.pypirc
 # [pypi]
 #  username = __token__
-#  password = pypi-AgEIcHlwI3MjUyNQACJXsicGVybWlzc2lvbnMiOiAidXNlciIsICJ2ZXJzaW9uIjogMX0AAAYgMLKU30wsWNjHovxCTNDSBF6
+#  password = pypi-AgEIcHlwI3MjUyNQACJXsicGVybWlzc2lvbnMiOiA7dXNlciIsICJ2ZXJzaW9uIjogMX0AAAYgMLKU
 pypi: dist
 	python3 -m twine upload dist/*

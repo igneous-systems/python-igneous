@@ -1,0 +1,11 @@
+{
+  "source": "nfs://NFS_HOST/NFS_EXPORT_PATH",
+  "destination": {
+    "url": "s3://BUCKET",
+    "region": "us-west-2",
+    "tier": "STANDARD",
+    "credential": "STORED_CREDENTIAL",
+    "index": "INDEX"
+  }
+}
+

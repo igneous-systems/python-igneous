@@ -1,0 +1,13 @@
+{
+  "source": "nfs://NFS_HOST/NFS_EXPORT_PATH",
+  "destination": {
+    "url": "azs-compact://BUCKET",
+    "tier": "Hot",
+    "index": "INDEX",
+    "transient": {
+      "accountName": "ACCOUNT_NAME",
+      "accountKey": "ACCOUNT_KEY"
+    }
+  }
+}
+

@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="igneous",
-    version="1.1.0",
+    version="1.1.1",
     author="Gui Rava",
     author_email="guirava@igneous.io",
     description="Igneous API Python SDK",
