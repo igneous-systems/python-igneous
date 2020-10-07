@@ -42,18 +42,95 @@ class Client:
         return Request(self, 'get', '/version').run().to_dict()
 
     def buckets_get(self, system_name: str = '', bucket_name: str = '', **kwargs) -> dict:
-        """Retrieve buckets
+        """Retrieve bucket with name `bucket_name`
 
         :param system_name: if given, retrieve info for buckets from that system only
-        :param bucket_name: if given, retrieve info for that bucket only
+        :param bucket_name: retrieve info for that bucket only
         :param kwargs: extra params for client.get call
-        :return:
+        :return: response as a dict
         """
         params = {} if empty(system_name) else {'system': system_name}
         response = Request(self, 'get', self._path('/buckets/', bucket_name), params=params, **kwargs).run()
         return response.to_dict()
 
     def buckets_list(self, system_name: str = '', match: str = '', names_only: bool = False, **kwargs) -> dict:
+        """List buckets
+
+        :param system_name:  if given, only retrieve info for buckets from that system
+        :param match: if given, only list buckets which name matches `match`
+        :param names_only: if given, only bucket names are listed
+        :param kwargs: extra params for client.get call
+        :return: response as a dict
+
+        Example 1: successful bucket list for an Igneous system that has 2 buckets: archive-export-13891 and index-export-34685-34690-a789091764405e3bb2687055
+
+        > client.buckets_list()
+
+        {
+            "reason": "OK",
+            "code": 200,
+            "data": {
+                "Buckets": {
+                    "archive-export-13891": {
+                        "LastCompleted": "2019-03-18T14:49:03.139979Z",
+                        "LastSize": 1581853043512,
+                        "Primary": true,
+                        "SourcePath": "/dense1",
+                        "System": "flashblade.iggy.bz"
+                    },
+                    "index-export-34685-34690-a789091764405e3bb2687055": {
+                        "BackupPolicy": "",
+                        "LastCompleted": "2020-04-17T18:47:22.712673Z",
+                        "LastSize": 34816,
+                        "Primary": false,
+                        "SourcePath": "/smallvol/csw3",
+                      " System": "smallvol.iggy.bz"
+                    },
+                }
+            },
+            "ok": true
+        }
+
+        Example 2: successful bucket list for the same Igneous system as in example 1, but with bucket names only:
+
+        > client.buckets_list(names_only=True)
+
+        {
+            "reason": "OK",
+            "code": 200,
+            "data": {
+                "Buckets": [
+                    "archive-export-13891",
+                    "index-export-34685-34690-a789091764405e3bb2687055"
+                ]
+            },
+            "ok": true
+        }
+
+        Example 3: successful bucket list for same Igneous system as in example 1, but list only buckets for which
+                   the name matches 'index'
+
+        > client.buckets_list( match='index')
+
+        {
+            "reason": "OK",
+            "code": 200,
+            "data": {
+                "Buckets": {
+                    "index-export-34685-34690-a789091764405e3bb2687055": {
+                        "BackupPolicy": "",
+                        "LastCompleted": "2020-04-17T18:47:22.712673Z",
+                        "LastSize": 34816,
+                        "Primary": false,
+                        "SourcePath": "/smallvol/csw3",
+                        "System": "smallvol.iggy.bz"
+                    },
+                }
+            },
+            "ok": true
+        }
+
+        """
         r = self.buckets_get(system_name=system_name, bucket_name='', **kwargs)
         if not r['ok']:
             return r

@@ -21,7 +21,7 @@ PRINT_REQUEST = False
 
 
 def json_dumps(d):
-    return igneous.json_dumps(d).replace('\n', '\n  ')
+    return igneous.pretty_print(d).replace('\n', '\n  ')
 
 
 def print_response(r):

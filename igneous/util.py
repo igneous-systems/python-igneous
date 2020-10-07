@@ -14,10 +14,11 @@ def empty(x: typing.Any) -> bool:
         return False
 
 
-def json_dumps(obj) -> str:
+def pretty_print(obj) -> str:
     """a JSON dumps function that never fails: if `obj` is not serializable, the returned string indicates the error
     """
     try:
         return json.dumps(obj, sort_keys=True, indent=4)
     except TypeError as e:
-        return json_dumps(dict(error=str(e), data=str(obj)))
+        return pretty_print(dict(error=str(e), data=str(obj)))
+

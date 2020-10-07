@@ -12,4 +12,4 @@ written with this very `igneous` package
 
 """
 from .client import Client
-from .util import json_dumps
+from .util import pretty_print
