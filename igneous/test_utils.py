@@ -8,6 +8,6 @@ class _foo:
 
 
 def test_pretty_print():
-    assert igneous.pretty_print(dict(a="1", b=2)) == '{\n    "a": "1",\n    "b": 2\n}'
-    assert igneous.pretty_print(_foo()) == \
+    assert igneous.pretty_format(dict(a="1", b=2)) == '{\n    "a": "1",\n    "b": 2\n}'
+    assert igneous.pretty_format(_foo()) == \
            '{\n    "data": "_foo",\n    "error": "Object of type _foo is not JSON serializable"\n}'

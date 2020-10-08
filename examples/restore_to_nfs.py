@@ -1,12 +1,12 @@
 """
-A simple example using the Python SDK to back up an NFS export to the Igneous system.
+A simple example using the Python SDK to restore data from the Igneous System onto an NFS export.
 
 This example program assumes that IGNEOUS_API_SERVER and IGNEOUS_API_KEY are set in the environment.
 
 This example program takes 3 command-line arguments:
- - the NFS host
- - the NFS path to back up
- - the name of the destination bucket at the Igneous system.
+ - the name of the bucket at the Igneous system to restore from
+ - the destination NFS host
+ - the destination NFS path to restore to
 
 """
 import os
@@ -16,16 +16,16 @@ import time
 import igneous
 
 if len(sys.argv) != 4:
-    print("USAGE: ", sys.argv[0], " <NFS host> <NFS path> <Igneous Bucket name>")
+    print("USAGE: ", sys.argv[0], " <Igneous Bucket name> <NFS host> <NFS path>")
     sys.exit(1)
 
-nfs_host, nfs_path, igneous_bucket_name = sys.argv[1:]
+igneous_bucket_name, nfs_host, nfs_path = sys.argv[1:]
 
 # Create the Source URL:
-source = 'nfs://' + nfs_host + '/' + nfs_path
+source = 'igneous:///' + igneous_bucket_name
 
 # Create the Destination URL:
-destination = 'igneous:///' + igneous_bucket_name
+destination = 'nfs://' + nfs_host + '/' + nfs_path
 
 client = igneous.Client(api_server=os.environ['IGNEOUS_API_SERVER'], api_key=os.environ['IGNEOUS_API_KEY'])
 print(source, '-->', destination)
@@ -72,14 +72,14 @@ if not response['ok']:
 task = response['data']['Tasks'][0]
 
 # This is the task ID of the task that was just created:
-task_id = task['ID'] # It is an opaque string, for instance: "NGNmMWMyNzdiNmI2MzQ5N2RmN2NkYzQ3ZDBhYjk0OTE="
+task_id = task['ID']  # It is an opaque string, for instance: "NGNmMWMyNzdiNmI2MzQ5N2RmN2NkYzQ3ZDBhYjk0OTE="
 
 # This is the current state of that task at the Igneous system.
-task_state = task['State'] # It can be one of: 'pending', 'running', 'finished' or 'failed'
+task_state = task['State']  # It can be one of: 'pending', 'running', 'finished' or 'failed'
 print(task_state)
 
 # Task was sent. Now poll repeatedly for the task status until it's done:
-while task_state == 'pending' or task_state =='running':
+while task_state == 'pending' or task_state == 'running':
     time.sleep(3)  # Sleep 3 seconds
     response: dict = client.tasks_get(task_id)
     if not response['ok']:
