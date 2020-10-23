@@ -433,7 +433,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"source\": {\n        \"url\": \"nfs://{{nfsHost1}}/{{nfsHost1_sourcePath1}}\"\n    },\n    \"destination\": {\n        \"url\": \"azs://{{azsLocation1}}\",\n        \"credential\": \"{{azsLocation1_storedCred}}\",\n        \"index\": \"{{autoBucket}}\"\n    },\n    \"debug\": \"taskconfig\"\n}",
+									"raw": "{\n    \"source\": {\n        \"url\": \"nfs://{{nfsHost1}}/{{nfsHost1_sourcePath1}}\"\n    },\n    \"destination\": {\n        \"url\": \"azs://{{azsLocation1}}\",\n        \"credential\": \"{{azsLocation1_storedCred}}\",\n        \"index\": \"{{autoBucket}}\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2377,7 +2377,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"source\": {\n        \"url\": \"s3://{{s3Location1}}\",\n        \"transient\": {\n            \"accessKey\": \"{{s3Location1_accessKey}}\",\n            \"secretKey\": \"{{s3Location1_secretKey}}\"\n        }\n    },\n    \"destination\": {\n        \"url\": \"gcs://{{gcsLocation1}}\",\n        \"transient\": {\n            \"projectId\": \"{{gcsLocation1_projectId}}\",\n            \"jwt\": \"{{gcsLocation1_jwt}}\"\n        },\n        \"index\": \"{{autoBucket}}\"\n    },\n    \"debug\": \"taskconfig\"\n}",
+									"raw": "{\n    \"source\": {\n        \"url\": \"s3://{{s3Location1}}\",\n        \"transient\": {\n            \"accessKey\": \"{{s3Location1_accessKey}}\",\n            \"secretKey\": \"{{s3Location1_secretKey}}\"\n        }\n    },\n    \"destination\": {\n        \"url\": \"gcs://{{gcsLocation1}}\",\n        \"transient\": {\n            \"projectId\": \"{{gcsLocation1_projectId}}\",\n            \"jwt\": \"{{gcsLocation1_jwt}}\"\n        },\n        \"index\": \"{{autoBucket}}\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2707,6 +2707,171 @@
 				{
 					"name": "Backup",
 					"item": [
+						{
+							"name": "Backup NFS → Igneous",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "394d7ad7-aa8d-4e7c-b520-8c47561b3c8b",
+										"exec": [
+											"pm.environment.set(\"autoBucketIndex\", Number(pm.environment.get(\"autoBucketIndex\")) + 1)",
+											"const dateNow = new Date()",
+											"pm.environment.set(\"autoBucket\", \"postmantest-\"+dateNow.getTime())",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "efbe6ec6-7206-4f86-a383-afa6695662d4",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"var jsonData = pm.response.json();",
+											"var taskId = jsonData.Tasks[0].ID;",
+											"pm.environment.set(\"taskId\",taskId)",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"source\": {\n        \"url\": \"nfs://{{nfsHost1}}/{{nfsHost1_sourcePath1}}\"\n    },\n    \"destination\": {\n        \"url\": \"igneous:///{{autoBucket}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{basePath}}/v1/tasks",
+									"host": [
+										"{{basePath}}"
+									],
+									"path": [
+										"v1",
+										"tasks"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "error message: invalid region",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"source\": {\n        \"url\": \"nfs://smallvol.iggy.bz/smallvol/guirava/src\"\n    },\n    \"destination\": {\n        \"url\": \"s3-compact://guirava-test1?region=blah&tier=STANDARD&credential=guirava-aws&index=nfss3c\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{basePath}}/v1.1/tasks",
+											"host": [
+												"{{basePath}}"
+											],
+											"path": [
+												"v1.1",
+												"tasks"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "Content-Length",
+											"value": "54"
+										},
+										{
+											"key": "Content-Type",
+											"value": "text/plain; charset=utf-8"
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 31 Aug 2020 23:35:58 GMT"
+										},
+										{
+											"key": "X-Request-Id",
+											"value": "4eb376da-bd5a-4397-998a-ff58857ac779"
+										},
+										{
+											"key": "X-Request-Id",
+											"value": "91027ee6-670f-4216-94b9-73c5793e581b"
+										}
+									],
+									"cookie": [],
+									"body": "{\"Error\":\"Invalid region name \\\"blah\\\" for provider\"}\n"
+								},
+								{
+									"name": "success: task is pending",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"source\": {\n        \"url\": \"nfs://smallvol.iggy.bz/smallvol/guirava/src\"\n    },\n    \"destination\": {\n        \"url\": \"s3-compact://guirava-test1?region=us-west-2&tier=STANDARD&credential=guirava-aws&index=nfss3c\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{basePath}}/v1.1/tasks",
+											"host": [
+												"{{basePath}}"
+											],
+											"path": [
+												"v1.1",
+												"tasks"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Length",
+											"value": "94"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 31 Aug 2020 23:36:33 GMT"
+										},
+										{
+											"key": "X-Request-Id",
+											"value": "cdeb4366-050e-4697-abc7-6f9c9457481a"
+										},
+										{
+											"key": "X-Request-Id",
+											"value": "e1f37a56-8848-4a42-b909-4e0375b2f970"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"Tasks\": [\n        {\n            \"ID\": \"OWEwOTIwOWU3NDc4MjQ0YTM2ZWZhMzVlNjJjZjlkNDQ=\",\n            \"State\": \"pending\"\n        }\n    ],\n    \"Total\": 0\n}"
+								}
+							]
+						},
 						{
 							"name": "Backup NFS → S3(compact,stored cred)",
 							"event": [
@@ -3052,9 +3217,6 @@
 									"script": {
 										"id": "00a426cd-419e-4432-8026-1de912b621da",
 										"exec": [
-											"pm.environment.set(\"autoBucketIndex\", Number(pm.environment.get(\"autoBucketIndex\")) + 1)",
-											"const dateNow = new Date()",
-											"pm.environment.set(\"autoBucket\", \"postmantest-\"+dateNow.getTime())",
 											""
 										],
 										"type": "text/javascript"
@@ -3082,7 +3244,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"source\": {\n        \"url\": \"igneous:///{{autoBucket}}\"\n    },\n    \"destination\": {\n        \"url\": \"{{nfsDestination1}}\"\n    },\n    \"debug\": \"taskconfig\"\n}",
+									"raw": "{\n    \"source\": {\n        \"url\": \"igneous:///{{autoBucket}}\"\n    },\n    \"destination\": {\n        \"url\": \"nfs://{{nfsHost1}}/{{nfsHost1_destinationPath1}}\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -3100,19 +3262,66 @@
 									]
 								}
 							},
-							"response": []
+							"response": [
+								{
+									"name": "Restore to NFS",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"source\": {\n        \"url\": \"igneous:///{{autoBucket}}\"\n    },\n    \"destination\": {\n        \"url\": \"nfs://{{nfsHost1}}/{{nfsHost1_destinationPath1}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{basePath}}/v1/tasks",
+											"host": [
+												"{{basePath}}"
+											],
+											"path": [
+												"v1",
+												"tasks"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Length",
+											"value": "137"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 23 Oct 2020 00:57:05 GMT"
+										},
+										{
+											"key": "X-Request-Id",
+											"value": "0b097e28-2d77-4b46-88b8-b7c684f56fb3"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"Tasks\": [\n        {\n            \"ID\": \"OTQzZmViNTkzZmUwODAyOGQ0MjdlNjhlZWI1ZDMwODc=\",\n            \"State\": \"pending\",\n            \"SourceBucket\": \"postmantest-1603413951883\"\n        }\n    ],\n    \"Total\": 0\n}"
+								}
+							]
 						},
 						{
-							"name": "Restore to NFS  (with prefix path)",
+							"name": "Restore to NFS (with prefix path)",
 							"event": [
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "3bbb712c-57be-4f94-b1f9-6b12de4bf8d9",
+										"id": "9987a772-0876-4084-a055-9f218af94f45",
 										"exec": [
-											"pm.environment.set(\"autoBucketIndex\", Number(pm.environment.get(\"autoBucketIndex\")) + 1)",
-											"const dateNow = new Date()",
-											"pm.environment.set(\"autoBucket\", \"postmantest-\"+dateNow.getTime())",
 											""
 										],
 										"type": "text/javascript"
@@ -3121,7 +3330,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "24aa8807-b0c4-4ada-ac7f-1024c5d14050",
+										"id": "2d85fee3-d68b-4397-a1d1-7202ffd6a4af",
 										"exec": [
 											"pm.test(\"Status code is 200\", function () {",
 											"    pm.response.to.have.status(200);",
@@ -3140,7 +3349,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"source\": {\n        \"url\": \"igneous:///{{autoBucket}}\",\n        \"prefix\": \"{{nfsHost1_sourcePath1}}\"\n    },\n    \"destination\": {\n        \"url\": \"nfs://{{nfsHost1}}/{{nfsHost1_destinationPath1}}\"\n    },\n    \"debug\": \"taskconfig\"\n}",
+									"raw": "{\n    \"source\": {\n        \"url\": \"igneous:///{{autoBucket}}\"\n    },\n    \"destination\": {\n        \"url\": \"nfs://{{nfsHost1}}/{{nfsHost1_destinationPath1}}\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -3158,7 +3367,57 @@
 									]
 								}
 							},
-							"response": []
+							"response": [
+								{
+									"name": "Restore to NFS (with prefix path)",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"source\": {\n        \"url\": \"igneous:///{{autoBucket}}\"\n    },\n    \"destination\": {\n        \"url\": \"nfs://{{nfsHost1}}/{{nfsHost1_destinationPath1}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{basePath}}/v1/tasks",
+											"host": [
+												"{{basePath}}"
+											],
+											"path": [
+												"v1",
+												"tasks"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Length",
+											"value": "137"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 23 Oct 2020 00:58:04 GMT"
+										},
+										{
+											"key": "X-Request-Id",
+											"value": "4ebbb1a0-2d25-4bb9-9844-15d703ebda8a"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"Tasks\": [\n        {\n            \"ID\": \"ZTg2M2U1NTlkMjU5ZDhhNjI0NmI1MmEyOTA2M2Q1Mzc=\",\n            \"State\": \"pending\",\n            \"SourceBucket\": \"postmantest-1603413951883\"\n        }\n    ],\n    \"Total\": 0\n}"
+								}
+							]
 						}
 					],
 					"protocolProfileBehavior": {},
@@ -3907,12 +4166,12 @@
 	],
 	"variable": [
 		{
-			"id": "a01c02d4-c926-4cb7-a46f-39cb0eefe108",
+			"id": "299f6155-4525-4c1f-97c8-53478a98d177",
 			"key": "basePath",
 			"value": "{{IGNEOUS_API_SERVER}}/x/igneous"
 		},
 		{
-			"id": "712c0384-9dea-43cc-ab01-01fffa9978df",
+			"id": "f2a73210-ab60-44eb-af6c-10655e68e118",
 			"key": "loopCounter",
 			"value": ""
 		}
