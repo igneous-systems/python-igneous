@@ -34,10 +34,10 @@ And here are the valid combinations in version 1.1 of the API:
 | -------------------------------------------- | ------------------------------------------------------------ | -------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | ``nfs://HOST``<br/>``smb://HOST``            | ✅ Copy Task                                                  | ✅ Backup or Copy Task                        | ✅ Backup or Copy task                                        | ✅ Copy task                                                  |
 | ``igneous://BUCKET``                         | ✅ Restore task                                               | ❌                                            | ❌                                                            | ❌                                                            |
-| ``s3://BUCKET``<br/>``azs://BUCKET``<br/>``gcs://BUCKET``| ✅ Copy Task   | ❌ | ❌ | ❌ |
+| ``s3://BUCKET``<br/>``azs://BUCKET``<br/>``gcs://BUCKET``| ✅ Copy Task   | ❌ | ❌ | ✅ Copy Task |
 
 
-Note that while `nfs://HOST is a native filer target and the URL host field needs to be the NFS host, but ``nfs-compact://BUCKET is a compact cloud target, and the URL host field needs to be the bucket name,
+Note that while `nfs://HOST` is a native filer target and the URL host field needs to be the NFS host, but `nfs-compact://BUCKET` is a compact cloud target, and the URL host field needs to be the bucket name,
 
 ### 2.2 More flexibility in the syntax for data movement requests
 
