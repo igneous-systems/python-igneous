@@ -396,6 +396,171 @@
 							]
 						},
 						{
+							"name": "Migration NFS → S3(native, transient creds) with prefix",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "bcb5bf5d-5422-4fa8-8454-5f30ceee570a",
+										"exec": [
+											"pm.environment.set(\"autoBucketIndex\", Number(pm.environment.get(\"autoBucketIndex\")) + 1)",
+											"const dateNow = new Date()",
+											"pm.environment.set(\"autoBucket\", \"postmantest-\"+dateNow.getTime())",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "205ae7a3-5958-40cf-84cd-e2afba43d210",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"var jsonData = pm.response.json();",
+											"var taskId = jsonData.Tasks[0].ID;",
+											"pm.environment.set(\"taskId\",taskId)",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"source\": {\n        \"url\": \"nfs://{{nfsHost1}}/{{nfsHost1_sourcePath1}}\"\n    },\n    \"destination\": {\n        \"url\": \"s3://{{s3Location1}}?prefix=foo\",\n        \"index\": \"{{autoBucket}}\",\n        \"transient\": {\n            \"accessKey\": \"{{s3Location1_accessKey}}\",\n            \"secretKey\": \"{{s3Location1_secretKey}}\"\n        }\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{basePath}}/v1/tasks",
+									"host": [
+										"{{basePath}}"
+									],
+									"path": [
+										"v1",
+										"tasks"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "error message: invalid region",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"source\": {\n        \"url\": \"nfs://smallvol.iggy.bz/smallvol/guirava/src\"\n    },\n    \"destination\": {\n        \"url\": \"s3-compact://guirava-test1?region=blah&tier=STANDARD&credential=guirava-aws&index=nfss3c\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{basePath}}/v1.1/tasks",
+											"host": [
+												"{{basePath}}"
+											],
+											"path": [
+												"v1.1",
+												"tasks"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "Content-Length",
+											"value": "54"
+										},
+										{
+											"key": "Content-Type",
+											"value": "text/plain; charset=utf-8"
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 31 Aug 2020 23:35:58 GMT"
+										},
+										{
+											"key": "X-Request-Id",
+											"value": "4eb376da-bd5a-4397-998a-ff58857ac779"
+										},
+										{
+											"key": "X-Request-Id",
+											"value": "91027ee6-670f-4216-94b9-73c5793e581b"
+										}
+									],
+									"cookie": [],
+									"body": "{\"Error\":\"Invalid region name \\\"blah\\\" for provider\"}\n"
+								},
+								{
+									"name": "success: task is pending",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"source\": {\n        \"url\": \"nfs://smallvol.iggy.bz/smallvol/guirava/src\"\n    },\n    \"destination\": {\n        \"url\": \"s3-compact://guirava-test1?region=us-west-2&tier=STANDARD&credential=guirava-aws&index=nfss3c\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{basePath}}/v1.1/tasks",
+											"host": [
+												"{{basePath}}"
+											],
+											"path": [
+												"v1.1",
+												"tasks"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Length",
+											"value": "94"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 31 Aug 2020 23:36:33 GMT"
+										},
+										{
+											"key": "X-Request-Id",
+											"value": "cdeb4366-050e-4697-abc7-6f9c9457481a"
+										},
+										{
+											"key": "X-Request-Id",
+											"value": "e1f37a56-8848-4a42-b909-4e0375b2f970"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"Tasks\": [\n        {\n            \"ID\": \"OWEwOTIwOWU3NDc4MjQ0YTM2ZWZhMzVlNjJjZjlkNDQ=\",\n            \"State\": \"pending\"\n        }\n    ],\n    \"Total\": 0\n}"
+								}
+							]
+						},
+						{
 							"name": "Migration NFS → AZS(native, stored creds)",
 							"event": [
 								{
@@ -4166,12 +4331,12 @@
 	],
 	"variable": [
 		{
-			"id": "299f6155-4525-4c1f-97c8-53478a98d177",
+			"id": "57b25a36-bb0e-4d01-b761-9056d29235ba",
 			"key": "basePath",
 			"value": "{{IGNEOUS_API_SERVER}}/x/igneous"
 		},
 		{
-			"id": "f2a73210-ab60-44eb-af6c-10655e68e118",
+			"id": "99343231-f55b-4f9b-ab07-7413393db563",
 			"key": "loopCounter",
 			"value": ""
 		}
