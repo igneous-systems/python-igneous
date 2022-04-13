@@ -76,15 +76,15 @@ class Client:
                         "LastSize": 1581853043512,
                         "Primary": true,
                         "SourcePath": "/dense1",
-                        "System": "flashblade.iggy.bz"
+                        "System": "example.filer.com"
                     },
                     "index-export-34685-34690-a789091764405e3bb2687055": {
                         "BackupPolicy": "",
                         "LastCompleted": "2020-04-17T18:47:22.712673Z",
                         "LastSize": 34816,
                         "Primary": false,
-                        "SourcePath": "/smallvol/csw3",
-                      " System": "smallvol.iggy.bz"
+                        "SourcePath": "/smallvol/home",
+                      " System": "example.filer.com"
                     },
                 }
             },
@@ -122,8 +122,8 @@ class Client:
                         "LastCompleted": "2020-04-17T18:47:22.712673Z",
                         "LastSize": 34816,
                         "Primary": false,
-                        "SourcePath": "/smallvol/csw3",
-                        "System": "smallvol.iggy.bz"
+                        "SourcePath": "/smallvol/home",
+                        "System": "example.filer.com"
                     },
                 }
             },

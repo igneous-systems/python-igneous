@@ -17,10 +17,10 @@ A successful response will always have this structure:
     'reason': 'OK',
     'code': 200,
     'request': {
-        'url': '<SERVER URL THAT WAS ACTUALLY HIT>' ,
+        'url': '<SERVER URL>' ,
         'method': 'get',
         'headers': {
-            'Authorization': '<THE CONTENT OF IGNEOUS_API_KEY>'
+            'Authorization': '<IGNEOUS_API_KEY>'
         },
         'payload': None
     },

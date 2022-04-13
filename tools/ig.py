@@ -34,26 +34,26 @@ client = igneous.Client()
 
 @click.group()
 @click.option('--api-key', '-k', required=True, envvar="IGNEOUS_API_KEY", help="Igneous API key")
-@click.option('--api-server', '-s', required=True, envvar="IGNEOUS_API_SERVER", help="Igneous API server")
+@click.option('--api-server', '-s', required=True, envvar="IGNEOUS_Server", help="Igneous API server")
 @click.option('--dry-run', is_flag=True, help="Print out request that would be sent to API but don't run it")
 @click.option('-r', '--print-request', is_flag=True, help="Print the request as part of the response")
 @click.option('-a', '--api-version', help="Defaults to v1. Can be: v1, v1.0 or v1.1")
 def cli(api_key, api_server, dry_run, print_request, api_version):
-    """Igneous API command line tool
+    """Rubrik NAS Cloud Direct API command line tool
 
     The API server and key are required, and can be provided in 3 different ways:
 
 \b
     - as command line options; example:
-        ig.py -k WMMKOAO2BWXDHJXTSUHT -s 10.105.0.22
+        ig.py -k <API_KEY> -s 10.105.0.22
     - via the IGNEOUS_API_KEY AND IGNEOUS_API_SERVER
       environment variables; example:
-        export IGNEOUS_API_KEY=WMMKOAO2BWXDHJXTSUHT
+        export IGNEOUS_API_KEY=<API_KEY>
         export IGNEOUS_API_SERVER=10.105.0.22
         ./ig.py
     - via a .env file; example:
         cat>.env
-            IGNEOUS_API_KEY=WMMKOAO2BWXDHJXTSUHT
+            IGNEOUS_API_KEY=<API_KEY>
             IGNEOUS_API_SERVER=10.105.0.22
         ./ig.py
     - you may have several env files, and switch between them from the shell:

@@ -6,8 +6,7 @@ This is the Python client library for Igneous' APIs.
 Available at: 
 
 - https://github.com/igneous-systems/python-igneous
-and
-- https://pypi.org/project/igneous
+
 
 Please refer to the Igneous API documentation at https://kb.igneous.io/docs for an introduction ;
 
@@ -23,7 +22,5 @@ one reflects changes only on the client SDK side. The current version is 1.1.1.
 
 ## Resources you will find in this repo
 
-- obviously the most notable one is the Python SDK under `igneous/`. The SDK under `igneous/` is also available as
-  a Python package from PyPi : https://pypi.org/project/igneous
 - `docs/` contains documentation about the Igneous API, in particular release notes with each new version of the API
 - `curl/` contains wrappers and example for reaching the Igneous API with `curl`

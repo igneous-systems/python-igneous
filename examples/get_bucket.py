@@ -29,10 +29,10 @@ A successful response will always have this structure:
     'reason': 'OK',
     'code': 200,
     'request': {
-        'url': '<SERVER URL THAT WAS ACTUALLY HIT>' ,
+        'url': '<SERVER URL>' ,
         'method': 'get',
         'headers': {
-            'Authorization': '<THE CONTENT OF IGNEOUS_API_KEY>'
+            'Authorization': '<IGNEOUS_API_KEY>'
         },
         'payload': None
     },
@@ -60,7 +60,7 @@ print(igneous.pretty_format(response))
                 "LastCompleted": "2020-10-03T07:06:25.603009Z",
                 "LastSize": 10583450,
                 "Primary": false,
-                "SourcePath": "/smallvol/guirava/src",
+                "SourcePath": "/smallvol/example/src",
                 "System": "smallvol.iggy.bz"
             }
         }
@@ -69,7 +69,7 @@ print(igneous.pretty_format(response))
     "reason": "OK",
     "request": {
         "headers": {
-            "Authorization": "WMMKOAO2BWXDHJXTSUHT"
+            "Authorization": "<API_KEY>"
         },
         "method": "get",
         "payload": null,

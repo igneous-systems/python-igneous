@@ -6,9 +6,9 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name="igneous",
     version="1.1.1",
-    author="Gui Rava",
-    author_email="guirava@igneous.io",
-    description="Igneous API Python SDK",
+    author="Rubrik Inc",
+    author_email="info@igneous.io",
+    description="Rubrik NAS Cloud Direct API Python SDK",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/igneous-systems/python-igneous",

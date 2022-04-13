@@ -1,5 +1,5 @@
 """
-A simple example using the Python SDK to list bucket names from the Igneous system.
+A simple example using the Python SDK to list bucket names from the Rubrik NCD system.
 
 This example program assumes that IGNEOUS_API_SERVER and IGNEOUS_API_KEY are set in the environment.
 """

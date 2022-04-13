@@ -72,7 +72,7 @@ if not response['ok']:
 task = response['data']['Tasks'][0]
 
 # This is the task ID of the task that was just created:
-task_id = task['ID']  # It is an opaque string, for instance: "NGNmMWMyNzdiNmI2MzQ5N2RmN2NkYzQ3ZDBhYjk0OTE="
+task_id = task['ID']  # It is an opaque string uniquely identifying the task
 
 # This is the current state of that task at the Igneous system.
 task_state = task['State']  # It can be one of: 'pending', 'running', 'finished' or 'failed'
@@ -94,7 +94,7 @@ while task_state == 'pending' or task_state == 'running':
             "Tasks": [
                 {
                     "Finished": "2020-10-07T19:42:55.99944Z",
-                    "ID": "NGNmMWMyNzdiNmI2MzQ5N2RmN2NkYzQ3ZDBhYjk0OTE=",
+                    "ID": "TASKID1",
                     "Started": "2020-10-07T19:42:36.573733Z",
                     "State": "finished",
                     "Summary": {
@@ -114,7 +114,7 @@ while task_state == 'pending' or task_state == 'running':
                           "Skipped": 0
                       }
                     },
-                    "TargetBucket": "guirava1"
+                    "TargetBucket": "bucket1"
                 }
             ],
             "Total": 1
@@ -137,7 +137,7 @@ print(igneous.pretty_format(response))
         "Tasks": [
             {
                 "Finished": "2020-10-07T20:11:15.999538323Z",
-                "ID": "YmJhOTIzYjUwMjQxMDFjOTJjY2I2YjQ1OWZiNmU3Zjg=",
+                "ID": "TASKID2",
                 "Started": "2020-10-07T20:10:56.053056297Z",
                 "State": "finished",
                 "Summary": {
@@ -166,11 +166,11 @@ print(igneous.pretty_format(response))
     "reason": "OK",
     "request": {
         "headers": {
-            "Authorization": "WMMKOAO2BWXDHJXTSUHT"
+            "Authorization": "<API_KEY>"
         },
         "method": "get",
         "payload": null,
-        "url": "http://10.105.0.22/x/igneous/v1/tasks/YmJhOTIzYjUwMjQxMDFjOTJjY2I2YjQ1OWZiNmU3Zjg="
+        "url": "http://10.105.0.22/x/igneous/v1/tasks/TASKID2"
     }
 }
 """
